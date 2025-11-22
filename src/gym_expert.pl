@@ -1,5 +1,6 @@
 :- module(gym_expert, [
-    rule/1
+    rule/1,
+    recommend/11
 ]).
 
 goal(strength).
@@ -183,3 +184,58 @@ warmup_tip(severe, _, _, add_ramp_up_set).
 warmup_tip(moderate, _, _, add_ramp_up_set).
 warmup_tip(_, _, low, longer_general_warmup).
 warmup_tip(_, _, _, standard_warmup).
+
+/* ===================================================
+   Core inference: recommend/11
+   =================================================== */
+/*
+recommend(
+  Goal,           % strength | hypertrophy | endurance
+  RepsLast,       % reps achieved last set
+  TargetReps,     % target reps for the set
+  RPE,            % 1..10
+  PerfDropPct,    % % performance drop vs first set (0..100)
+  Soreness,       % none | mild | moderate | severe
+  SleepHours,     % e.g. 6.5
+  SleepQuality,   % poor | ok | good
+  HRV,            % low | normal | high
+  Recovery,       % low | medium | high
+  Advice          % list of action(Key,Value)
+).
+*/
+
+recommend(Goal, RepsLast, TargetReps, RPE, PerfDrop,
+          Soreness, SleepH, SleepQ, HRV, Recovery, Advice) :-
+
+    % --- Input validation via domain predicates ---
+    goal(Goal),
+    number(RepsLast),
+    number(TargetReps),
+    rpe(RPE),
+    number(PerfDrop),
+    soreness(Soreness),
+    number(SleepH),
+    sleep_quality(SleepQ),
+    hrv(HRV),
+    recovery(Recovery),
+
+    % --- Infer each component from rule base ---
+    base_rest(Goal, BaseRest),
+    load_delta(Goal, RepsLast, TargetReps, RPE, LoadAdj, LoadPct),
+    rest_adjust(RPE, PerfDrop, Soreness, SleepH, SleepQ,
+                HRV, Recovery, BaseRest, RestSecs),
+    volume_adjust(Goal, PerfDrop, Soreness, SleepQ, HRV, Recovery, VolAdj),
+    deload_flag(PerfDrop, Soreness, SleepQ, HRV, Recovery, Deload),
+    technique_focus(Goal, RPE, PerfDrop, Tech),
+    warmup_tip(Soreness, SleepQ, HRV, Warmup),
+
+    % --- Package advice as a structured list ---
+    Advice = [
+        action(rest_seconds, RestSecs),
+        action(load_adjustment, LoadAdj),
+        action(load_percent, LoadPct),
+        action(volume_adjustment, VolAdj),
+        action(deload, Deload),
+        action(technique_focus, Tech),
+        action(warmup, Warmup)
+    ].
