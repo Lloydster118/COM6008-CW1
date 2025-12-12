@@ -123,7 +123,7 @@ This project demonstrates:
 
 ---
 
-## 👤 Author
+## 👤 Authors
 
 **Harry and Siyan**  
 Buckinghamshire New University  
