@@ -78,7 +78,7 @@ https://www.swi-prolog.org
 
 ### 2️⃣ Set the working directory
 ```prolog
-working_directory(_, 'D:/uni/uni-project/Gym-Expert-System-COM6008-CW1').
+working_directory(_, 'your local file directory').
 ```
 
 ### 3️⃣ Load the expert system
