@@ -4,11 +4,8 @@
 
 run_tests :-
     writeln('--- Running Gym Expert System Tests ---'),
-    test_1,
-    test_2,
-    test_3,
-    test_4,
-    test_5,
+    test_1, test_2, test_3, test_4, test_5,
+    test_6, test_7, test_8, test_9, test_10,
     writeln('--- All tests executed ---').
 
 has_action(Key, Advice) :-
@@ -58,3 +55,32 @@ test_5 :-
     assert_true(Rest >= 45, 'T5 rest >= base'),
     get_action(deload, Advice, Deload),
     assert_true(Deload = no, 'T5 deload = no').
+
+test_6 :-
+    recommend(strength, 5, 5, 7, 5, none, 8.0, good, high, high, Advice),
+    get_action(load_adjustment, Advice, LoadAdj),
+    assert_true(LoadAdj = increase, 'T6 RPE=7 still allows increase').
+
+test_7 :-
+    recommend(strength, 5, 5, 8, 5, none, 8.0, good, high, high, Advice),
+    get_action(load_adjustment, Advice, LoadAdj),
+    assert_true(LoadAdj = hold, 'T7 RPE=8 causes hold').
+
+test_8 :-
+    recommend(hypertrophy, 10, 10, 6, 5, mild, 5.5, poor, low, low, Advice),
+    get_action(load_adjustment, Advice, LoadAdj),
+    get_action(rest_seconds, Advice, Rest),
+    assert_true(LoadAdj = hold, 'T8 fatigue overrides performance'),
+    assert_true(Rest > 90, 'T8 rest increases due to fatigue').
+
+test_9 :-
+    recommend(strength, 4, 5, 7, 5, none, 8.5, good, high, high, Advice),
+    get_action(load_adjustment, Advice, LoadAdj),
+    assert_true(LoadAdj = hold, 'T9 missed reps but recovery prevents decrease').
+
+test_10 :-
+    recommend(strength, 3, 5, 9, 45, severe, 5.0, poor, low, low, Advice),
+    get_action(deload, Advice, Deload),
+    get_action(volume_adjustment, Advice, Vol),
+    assert_true(Deload = yes, 'T10 deload triggered under extreme fatigue'),
+    assert_true(Vol = reduce_30, 'T10 volume aggressively reduced').
