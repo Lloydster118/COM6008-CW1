@@ -4,6 +4,9 @@
     advise/0
 ]).
 
+:- discontiguous load_delta/6.
+:- discontiguous rule/1.
+
 goal(strength).
 goal(hypertrophy).
 goal(endurance).
@@ -106,14 +109,23 @@ rule('Otherwise keep base rest.').
 rest_adjust(RPE, PerfDrop, Soreness, SleepH, SleepQ,
             HRV, Recovery, Base, Rest) :-
 
-    Extra1 is (RPE >= 9      -> 75 ; 0),
-    Extra2 is (PerfDrop >=20 -> 90 ; 0),
+    rpe_extra(RPE, Extra1),
+    perf_extra(PerfDrop, Extra2),
     sore_extra(Soreness, E3),
     sleep_extra(SleepH, SleepQ, E4),
     recov_extra(HRV, Recovery, E5),
 
     Total is Base + Extra1 + Extra2 + E3 + E4 + E5,
     clamp(Total, 30, 420, Rest).
+
+rpe_extra(RPE, 75) :-
+    RPE >= 9, !.
+rpe_extra(_, 0).
+
+perf_extra(PerfDrop, 90) :-
+    PerfDrop >= 20, !.
+perf_extra(_, 0).
+
 
 sore_extra(moderate, 45).
 sore_extra(severe,   60).
@@ -171,11 +183,14 @@ rule('Endurance: breathing & tempo focus.').
 
 technique_focus(strength, RPE, PerfDrop, bar_speed_and_bracing) :-
     (RPE >= 9 ; PerfDrop >= 20), !.
+technique_focus(strength, _, _, bar_speed_intent).
 
 technique_focus(hypertrophy, RPE, PerfDrop, controlled_eccentrics) :-
     (RPE >= 8 ; PerfDrop >= 15), !.
+technique_focus(hypertrophy, _, _, controlled_eccentrics).
 
 technique_focus(endurance, _, _, breathing_and_tempo).
+
 
 rule('If poor recovery/sleep -> extend general warmup 5-8 minutes.').
 rule('If moderate/severe soreness -> add ramp-up set at ~70% working load.').
