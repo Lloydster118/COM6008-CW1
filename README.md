@@ -1,125 +1,130 @@
-📘 Gym Expert System — COM6008 Knowledge-Based Systems in AI
+# 📘 Gym Expert System  
+### COM6008 — Knowledge-Based Systems in AI
 
-A Prolog-based expert system that provides gym training recommendations between sets, based on performance, fatigue indicators, sleep quality, soreness, recovery metrics, and training goals.
+A **Prolog-based expert system** that provides gym training recommendations *between sets*, based on performance, fatigue, recovery, and training goals.
 
-This project is part of the COM6008: Knowledge-Based Systems in AI coursework at Buckinghamshire New University.
+This project was developed as part of the **COM6008: Knowledge-Based Systems in AI** coursework at **Buckinghamshire New University**.
 
-🚀 Features
+---
 
-✔ Expert knowledge encoded as ~24 symbolic rules
-✔ Supports strength, hypertrophy, and endurance training goals
-✔ Provides recommendations for:
+## 🚀 Features
 
-Rest period (seconds)
+- ✔ Expert knowledge encoded as **~24 symbolic rules**
+- ✔ Supports **strength**, **hypertrophy**, and **endurance** goals
+- ✔ Generates recommendations for:
+  - Rest duration (seconds)
+  - Load adjustment (increase / hold / decrease + %)
+  - Volume modification
+  - Deload warnings
+  - Technique focus
+  - Warm-up adjustments
+- ✔ Includes **interactive mode** and **automated test cases**
 
-Load adjustment (increase / hold / decrease with %)
+---
 
-Volume modification
+## 🧠 How the System Works
 
-Deload warnings
+The system uses **production rules (IF–THEN)** to reason about training decisions using three information groups:
 
-Technique focus
+### 🔹 Performance Metrics
+- Reps achieved vs target
+- Rate of Perceived Exertion (RPE)
+- Performance drop-off between sets (%)
 
-Warm-up changes
+### 🔹 Recovery & Readiness Indicators
+- Muscle soreness
+- Sleep duration
+- Sleep quality
+- Heart Rate Variability (HRV)
+- Subjective recovery state
 
-✔ Includes an interactive advisory mode and automated test cases
+### 🔹 Training Goal
+- Strength
+- Hypertrophy
+- Endurance
 
-🧠 How It Works
+Each advisory component is inferred independently and combined into a single structured recommendation.
 
-The expert system uses production rules (IF–THEN) to reason about training decisions based on:
+---
 
-Performance metrics
+## 🧩 System Design
 
-Reps achieved vs target
+- Knowledge represented symbolically using Prolog predicates
+- Rule priority controlled via clause ordering and cut operators
+- Default fallback rules ensure the system always returns advice
+- Conflicting indicators (e.g. good performance but poor recovery) are handled through **separation of concerns**, not numerical optimisation
 
-Rate of Perceived Exertion (RPE)
+This approach prioritises **explainability and transparency** over statistical learning.
 
-Performance drop-off between sets (%)
+---
 
-Readiness & recovery indicators
+## 📁 Project Structure
 
-Muscle soreness
-
-Sleep duration
-
-Sleep quality
-
-Heart Rate Variability (HRV)
-
-Subjective recovery state
-
-Training goal
-
-Strength
-
-Hypertrophy
-
-Endurance
-
-Each advisory component (rest, load, volume, etc.) is inferred independently and then combined into a structured recommendation.
-
-🧩 System Design
-
-Knowledge is represented symbolically using Prolog predicates
-
-Rule priority is controlled through clause ordering and cut operators
-
-Default fallback rules ensure the system always returns advice
-
-Conflicting indicators (e.g. good performance but poor recovery) are handled through separation of concerns rather than numerical optimisation
-
-This design prioritises explainability and transparency over statistical learning.
-
-📁 Project Structure
-
+```
 Gym-Expert-System-COM6008-CW1/
 ├── src/
 │   └── gym_expert.pl
 ├── tests/
 │   └── test_cases.pl
 ├── README.md
+```
 
-▶️ How to Run
+---
 
-Install SWI-Prolog
+## ▶️ How to Run
+
+### 1️⃣ Install SWI-Prolog  
 https://www.swi-prolog.org
 
-Set the working directory:
-
+### 2️⃣ Set the working directory
+```prolog
 working_directory(_, 'D:/uni/uni-project/Gym-Expert-System-COM6008-CW1').
+```
 
-
-Load the expert system:
-
+### 3️⃣ Load the expert system
+```prolog
 [src/gym_expert].
+```
 
-
-Run a sample recommendation:
-
+### 4️⃣ Run a sample recommendation
+```prolog
 recommend(strength, 5, 5, 8, 10, mild, 7.5, ok, normal, medium, Advice).
+```
 
-
-Run automated tests:
-
+### 5️⃣ Run automated tests
+```prolog
 [tests/test_cases].
 run_tests.
+```
 
-🧪 Testing
+---
+
+## 🧪 Testing
 
 The system includes an automated Prolog test harness that evaluates:
 
-Typical training scenarios
+- Typical training scenarios  
+- Boundary conditions (e.g. RPE thresholds)  
+- Conflicting indicators  
+- Extreme fatigue and deload cases  
 
-Boundary conditions (e.g. RPE thresholds)
+All test cases execute successfully, demonstrating consistent rule behaviour.
 
-Conflicting indicators
+---
 
-Extreme fatigue and deload cases
+## 🎓 Academic Context
 
-All tests execute successfully, demonstrating consistent rule behaviour.
+This project demonstrates:
 
-👤 Author
+- Rule-based knowledge representation
+- Deterministic inference and rule prioritisation
+- Explainable AI decision-making
+- Systematic testing and evaluation
 
-Harry and Siyan
-Buckinghamshire New University
-COM6008 – Knowledge-Based Systems in AI
+---
+
+## 👤 Author
+
+**Harry and Siyan**  
+Buckinghamshire New University  
+COM6008 — Knowledge-Based Systems in AI
